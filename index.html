@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href='http://maxcdn.bootstrapcdn.com/bootswatch/3.2.0/darkly/bootstrap.min.css' rel='stylesheet'>
+    <style type='text/css'>
+      input {
+        margin-bottom: 10px;
+      }
+
+      #content {
+        margin-top: 60px;
+        padding-top: 20px;
+      }
+
+      #password, #info {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='navbar navbar-default navbar-fixed-top' role='navigation'>
+      <div class='container'>
+        <div class='navbar-header'>
+          <a class='navbar-brand' href='/'>Kerberos</a>
+        </div>
+      </div>
+    </div>
+    <div id='content' class='container'>
+      <div class='row'>
+        <div class='well col-md-offset-3 col-md-6'>
+          <p><strong>Kerberos</strong> generates strong and unique passwords for you based on a single master password and a string identifying the service the password will be used for.</p>
+          <p>For example, if your master password is <em>str0ngp4ass</em> and the seed is <em>gmail</em>, your generated password will be <em>d1ifutt2fcs18frl9evmjqncdi</em>.</p>
+          <p><strong>Kerberos</strong> runs in the browser and does not store your passwords.</p>
+        </div>
+        <div class='col-sm-offset-4 col-sm-4'>
+          <form>
+            <input id='master' class='form-control' type='password' placeholder='Master password' autocomplete='off' autofocus></input>
+            <input id='seed' class='form-control' type='password' placeholder='Seed'></input>
+            <button class='btn btn-primary form-control' type='submit'>Generate password!</button>
+          </form>
+          <div class='result'>
+            <p id='info' style='display: none'>Copy the password:</p>
+            <input id='password' class='form-control' type='text' style='display: none'></input>
+            <a id='back' href='/' class='btn btn-primary form-control' style='display: none'>&laquo; Back</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js'></script>
+    <script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.3.10/seedrandom.js'></script>
+    <script type='text/javascript'>
+      $(function () {
+        $('form').submit(function (event) {
+          event.preventDefault();
+
+          var View = {
+            initialize: function () {
+              this.form = $('from');
+              this.master = $('#master').val();
+              this.seed = $('#seed').val();
+              this.infoEl = $('#info');
+              this.passwordEl = $('#password');
+              this.backEl = $('#back');
+              this.render();
+            },
+
+            render: function() {
+              var password = this.generatePassword(this.master + this.seed);
+              this.passwordEl.val(password);
+              this.infoEl.show();
+              this.passwordEl.show();
+              this.passwordEl.select();
+              this.backEl.show();
+              $('form').remove();
+            },
+
+            generatePassword: function (seed) {
+              Math.seedrandom(seed);
+              var newPassword = Math.random().toString(36);
+              return newPassword.slice(2, newPassword.length);
+            }
+          };
+
+          View.initialize();
+        });
+      });
+    </script>
+  </body>
+</html>
